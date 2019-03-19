@@ -36,8 +36,8 @@
 
     if (!errorCounter.err) { console.log('All images are ok') }
     else { 
-        errorCounter.errors.filter( (el,idx,arr) => idx == arr.indexOf(el) );
-        console.log(`Found ${errorCounter.errors.length} errors`);
+        let errors = errorCounter.errors.filter( (el,idx,arr) => idx == arr.indexOf(el) );
+        console.log(`Found ${errors.length} errors`);
         
         fs.writeFileSync('./links.html', '', ()=>{}); 
         errorCounter.imgs
