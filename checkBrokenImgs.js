@@ -41,11 +41,10 @@
         errors.forEach(err => { console.log(err) });
         
         fs.writeFileSync('./links.html', '', ()=>{}); 
-        errorCounter.imgs
-            .filter( (el,idx,arr) => idx == arr.indexOf(el) )
-            .forEach(link => fs.appendFileSync('./links.html', `${link}\n`) ); 
+        let imgErrors = errorCounter.imgs.filter( (el,idx,arr) => idx == arr.indexOf(el) );
+        imgErrors.forEach(link => fs.appendFileSync('./links.html', `${link}\n`) ); 
             
-        console.log(`Need to add ${errors.imgs.length} image${errors.length > 1 ? 's' : ''} on ${errors.length} page${errors.length > 1 ? 's' : ''}`);
+        console.log(`Need to add ${imgErrors.length} image${imgErrors.length > 1 ? 's' : ''} on ${errors.length} page${errors.length > 1 ? 's' : ''}`);
     }
     
     console.log(''); console.log('--------------'); console.log('done');
