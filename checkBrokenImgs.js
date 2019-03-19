@@ -1,11 +1,11 @@
 {
     const axios = require('axios');
     const fs = require('fs');
+
+    const urlMain = 'https://stanok74.ru/katalog/internet-magazin/dlja-listovogo-metalla/uglovyrubnye-stanki/gidravlicheskie';
+    urlPart = 'gidravlicheskie';
     
     (async()=>{
-
-    const urlMain = 'https://stanok74.ru/katalog/internet-magazin/dlja-vozduhovodov-i-vodostokov/zigovochnye-stanki/promyshlennye';
-    urlPart = 'promyshlennye';
 
     console.log(''); console.log('started - ', urlPart); console.log('--------------'); console.log('');
     
@@ -22,6 +22,7 @@
     
             for (page of pagesUrls) {
                 let ImgsFromPageArr = await getImgsLinksFromPage(page);
+
                 await checkForBrokenImgs(ImgsFromPageArr, page, errorCounter);
             }
 
@@ -37,12 +38,14 @@
     if (!errorCounter.err) { console.log('All images are ok') }
     else { 
         let errors = errorCounter.errors.filter( (el,idx,arr) => idx == arr.indexOf(el) );
-        console.log(`Found ${errors.length} errors`);
+        errors.forEach(err => { console.log(err) });
         
         fs.writeFileSync('./links.html', '', ()=>{}); 
         errorCounter.imgs
             .filter( (el,idx,arr) => idx == arr.indexOf(el) )
             .forEach(link => fs.appendFileSync('./links.html', `${link}\n`) ); 
+            
+        console.log(`Need to add ${errors.imgs.length} image${errors.length > 1 ? 's' : ''} on ${errors.length} page${errors.length > 1 ? 's' : ''}`);
     }
     
     console.log(''); console.log('--------------'); console.log('done');
@@ -71,11 +74,13 @@ async function getImgsLinksFromPage (pageUrl) {
     let strings = response.data.split('<img');
 
     return strings
-        .filter(str => !~str.indexOf('script') && !~str.indexOf('eshop-item-small__img'))
-        .map( str => str.match(/_mod_files.+?(jp(e)?g|png|webp)+?/g) )
-        .filter( str => str && !(/yandex/gi).test(str[0]) && !(/amiro/).test(str[0]) )
-        .map( str => urlmain + str[0] )
-        .filter( (str,idx,arr) => arr.indexOf(str) === idx );
+    .filter(str => !~str.indexOf('eshop-item-small__img'))
+    .map( str => str.match(/_mod_files.+?(jp(e)?g|png|webp)+?/g) )
+    .filter( str => str )
+    .reduce( (res,str) => {
+       return res.concat( str.map( el => urlmain + el ) )
+    }, [] )
+    .filter( (str,idx,arr) => arr.indexOf(str) === idx );
 }
 
 async function getProductsLinksFromCatalog (pageUrl, partUrl) {
