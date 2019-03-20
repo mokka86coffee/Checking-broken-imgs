@@ -1,17 +1,18 @@
 {
+
     const axios = require('axios');
     const fs = require('fs');
 
-    const urlMain = 'https://stanok74.ru/katalog/internet-magazin/dlja-listovogo-metalla/uglovyrubnye-stanki/gidravlicheskie';
-    urlPart = 'gidravlicheskie';
+    const urlMain = 'https://stanok74.ru/katalog/internet-magazin/stroitelnoe-oborudovanie/rabota-s-armaturoj/elektricheskie-stanki-rezki';
+    const urlPart = 'rabota-s-armaturoj/elektricheskie-stanki-rezki';
     
     (async()=>{
-
+    
     console.log(''); console.log('started - ', urlPart); console.log('--------------'); console.log('');
     
     let errorCounter = { err: 0, errors: [], imgs: [] };
 
-    for (let i=0; i< 1180; i+=12) {
+    for ( let i=0; i< 1180; i+=12 ) {
         const url = !i
             ? urlMain
             : `${urlMain}?action=rsrtme&catid=20107&offset=${i}`;
@@ -104,4 +105,5 @@ async function getProductsLinksFromCatalog (pageUrl, partUrl) {
        
     }
 }
+
 }
